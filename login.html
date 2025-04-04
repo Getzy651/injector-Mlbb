@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .box {
+      background: #111;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #0ff;
+      text-align: center;
+      width: 300px;
+    }
+
+    .box h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #0ff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>LOGIN</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Login</button>
+    <p class="error" id="error"></p>
+  </div>
+
+  <script>
+    const defaultAdmin = { username: "gilang", password: "gilang", role: "admin" };
+
+    if (!localStorage.getItem("users")) {
+      localStorage.setItem("users", JSON.stringify([defaultAdmin]));
+    }
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      const error = document.getElementById("error");
+
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      const found = users.find(u => u.username === user && u.password === pass);
+      
+      if (found) {
+        localStorage.setItem("currentUser", JSON.stringify(found));
+        if (found.role === "admin") {
+          window.location.href = "admin.html";
+        } else {
+          window.location.href = "injector.html";
+        }
+      } else {
+        error.textContent = "Username atau password salah!";
+      }
+    }
+  </script>
+</body>
+</html>

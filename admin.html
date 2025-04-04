@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .box {
+      background: #111;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #0ff;
+      text-align: center;
+      width: 350px;
+    }
+
+    .box h2 {
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px;
+      background: #0ff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .user-list {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .user-list ul {
+      list-style: none;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Tambah Akun Member</h2>
+    <input type="text" id="new-username" placeholder="Username Baru" />
+    <input type="password" id="new-password" placeholder="Password Baru" />
+    <select id="new-role">
+      <option value="member">Member</option>
+    </select>
+    <button onclick="addUser()">Tambah</button>
+
+    <div class="user-list">
+      <h3>Daftar Akun</h3>
+      <ul id="userList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const userList = document.getElementById("userList");
+
+    function renderUsers() {
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      userList.innerHTML = "";
+      users.forEach(user => {
+        const li = document.createElement("li");
+        li.textContent = `${user.username} (${user.role})`;
+        userList.appendChild(li);
+      });
+    }
+
+    function addUser() {
+      const username = document.getElementById("new-username").value;
+      const password = document.getElementById("new-password").value;
+      const role = document.getElementById("new-role").value;
+
+      if (!username || !password) {
+        alert("Isi semua kolom!");
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const exists = users.some(u => u.username === username);
+      if (exists) {
+        alert("Username sudah ada!");
+        return;
+      }
+
+      users.push({ username, password, role });
+      localStorage.setItem("users", JSON.stringify(users));
+      renderUsers();
+      alert("Akun berhasil ditambahkan!");
+      document.getElementById("new-username").value = "";
+      document.getElementById("new-password").value = "";
+    }
+
+    renderUsers();
+  </script>
+</body>
+</html>
